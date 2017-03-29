@@ -38,7 +38,7 @@ export class MapLoader {
     async downloadOsmFile() {
         return new Promise<boolean>((resolve, reject) => {
             let file = fs.createWriteStream(OSM_FILE_PATH);
-            let req: http.ClientRequest = httpsWithFollowRedirects.request(OSM_FILE_DOWNLOAD_OPTIONS, function (res: http.ClientResponse) {
+            let req: http.ClientRequest = httpsWithFollowRedirects.request(process.env.MAP_URL, function (res: http.ClientResponse) {
                 console.log("statusCode: ", res.statusCode);
                 console.log("headers: ", res.headers);
                 let length = parseInt(res.headers['content-length'], 10);
