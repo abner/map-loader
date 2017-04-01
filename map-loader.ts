@@ -7,6 +7,7 @@ import * as path from 'path';
 import * as db from './db';
 
 var httpsWithFollowRedirects = require('follow-redirects').https;
+var httpWithFollowRedirects = require('follow-redirects').http;
 
 export const QUERY_TABLES_OPENSTREETMAPS = 'select count(1) as qtyTables FROM information_schema.tables WHERE table_schema = \'public\' and table_name like \'planet_osm%\' ';
 //export const OSM_FILE_PATH = '/tmp/australia-latest.osm.pbf';
@@ -38,9 +39,11 @@ export class MapLoader {
     async downloadOsmFile() {
         return new Promise<boolean>((resolve, reject) => {
             let file = fs.createWriteStream(OSM_FILE_PATH);
-            let req: http.ClientRequest = httpsWithFollowRedirects.request(process.env.MAP_URL, function (res: http.ClientResponse) {
-                console.log("statusCode: ", res.statusCode);
-                console.log("headers: ", res.headers);
+            let url = require('url');
+            var mapUrl = url.parse(process.env.MAP_URL);
+            var requestFunction = (mapUrl.protocol === 'https') ?  httpsWithFollowRedirects : httpWithFollowRedirects;
+            let req: http.ClientRequest = requestFunction.request(process.env.MAP_URL, function (res: http.ClientResponse) {
+                console.log("Download started... ");
                 let length = parseInt(res.headers['content-length'], 10);
                 let totalBytes = 0;
                 let nextPercentToPrint = 5.0;

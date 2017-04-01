@@ -54,16 +54,27 @@ RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg \
 
 RUN mkdir -p /opt/map-loader
 
-COPY *.ts /opt/map-loader/
 COPY *.json /opt/map-loader/
 
 RUN node --version
 RUN cd /opt/map-loader; yarn install
 
-
-
 WORKDIR /opt/map-loader
 
+COPY *.ts /opt/map-loader/
 
-CMD [ "yarn", "start" ]
+COPY entrypoint.sh /opt/map-loader/entrypoint.sh
+COPY splash.txt /opt/map-loader/splash.txt
+
+RUN chmod +x /opt/map-loader/entrypoint.sh
+
+#ENTRYPOINT ["/opt/map-loader/entrypoint.sh"]
+
+CMD "/opt/map-loader/entrypoint.sh"
+
+RUN ln -s /opt/map-loader/entrypoint.sh /usr/bin/map-loader
+
+ENTRYPOINT ["map-loader"]
+
+#CMD [ "yarn", "start" ]
 
