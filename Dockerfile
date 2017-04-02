@@ -63,18 +63,13 @@ WORKDIR /opt/map-loader
 
 COPY *.ts /opt/map-loader/
 
-COPY entrypoint.sh /opt/map-loader/entrypoint.sh
+COPY map-loader.sh /opt/map-loader/map-loader.sh
 COPY splash.txt /opt/map-loader/splash.txt
 
-RUN chmod +x /opt/map-loader/entrypoint.sh
+RUN chmod +x /opt/map-loader/map-loader.sh
 
-#ENTRYPOINT ["/opt/map-loader/entrypoint.sh"]
+CMD "/opt/map-loader/map-loader.sh"
 
-CMD "/opt/map-loader/entrypoint.sh"
-
-RUN ln -s /opt/map-loader/entrypoint.sh /usr/bin/map-loader
+RUN ln -s /opt/map-loader/map-loader.sh /usr/bin/map-loader
 
 ENTRYPOINT ["map-loader"]
-
-#CMD [ "yarn", "start" ]
-
